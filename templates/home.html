@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}About Gulf Custody{% endblock %}
+{% block content %}
+
+<div class="container">
+  <form method="get" action="/">
+    <p class="bigger-txt">
+    {{ search_form.as_p }}
+    </p>
+    <input type="submit" value="Search" />
+  </form>
+  <br><br>
+  <form enctype="multipart/form-data" method="post" action="/">
+    {% csrf_token %}
+    {{ photo_form.as_p }}
+    <input type="submit" value="add" />
+
+
+  </form>
+
+
+  <br><br>
+
+
+  {% if filtered %}
+  <div style="width:100%">
+    {% for x in filtered %}
+    <div style="float:left; width:250px; height:300px;">
+      <div class="card space">
+      <a href="{{ x.photo.url }}" target="_blank"><img class="img-thumbnail" src="{{ x.photo.url }}" /></a>
+      <div class="card-body align-self-center">
+             <a href="{{ x.photo.url }}" target="_blank" class="btn btn-primary">View Image</a>
+           </div>
+      </div>
+      </div>
+    {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
