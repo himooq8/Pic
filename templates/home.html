@@ -1,41 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}About Gulf Custody{% endblock %}
+{% block title %} D i m a {% endblock %}
 {% block content %}
-
 <div class="container">
-  <form method="get" action="/">
-    <p class="bigger-txt">
-    {{ search_form.as_p }}
-    </p>
-    <input type="submit" value="Search" />
+    <br/><br/>
+    <br/><br/>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    <br/><br/>
+    <br/><br/>
+  <form method="POST" action="{{ url_for('add') }}" class="d-flex" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ picture_form.number(class="form-control me-2") }} <br/><br/>
+        {{ picture_form.picture() }} <br/><br/>
+        {{ picture_form.submit(class="btn btn-primary") }} <br/><br/>
   </form>
-  <br><br>
-  <form enctype="multipart/form-data" method="post" action="/">
-    {% csrf_token %}
-    {{ photo_form.as_p }}
-    <input type="submit" value="add" />
-
-
-  </form>
-
-
-  <br><br>
-
-
-  {% if filtered %}
-  <div style="width:100%">
-    {% for x in filtered %}
-    <div style="float:left; width:250px; height:300px;">
-      <div class="card space">
-      <a href="{{ x.photo.url }}" target="_blank"><img class="img-thumbnail" src="{{ x.photo.url }}" /></a>
-      <div class="card-body align-self-center">
-             <a href="{{ x.photo.url }}" target="_blank" class="btn btn-primary">View Image</a>
-           </div>
-      </div>
-      </div>
-    {% endfor %}
-    </div>
-  {% endif %}
 </div>
-
 {% endblock %}

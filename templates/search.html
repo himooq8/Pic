@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} D i m a {% endblock %}
+{% block content %}
+<div class="container">
+    <br/><br/>
+    <br/><br/>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    <br/><br/>
+    <br/><br/>
+  <h1> You Searched For: <em>{{ searched }}</em> </h1>
+        <br/>
+        {% if pictures %}
+        {% for pic in pictures %}
+        <div style="float:left; width:250px; height:300px;">
+      <div class="card space">
+      <a href="{{ pic }}" target="_blank"><img class="img-thumbnail" src="{{ pic }}" /></a>
+      <div class="card-body align-self-center">
+             <a href="{{ pic }}" target="_blank" class="btn btn-primary">View Image</a>
+           </div>
+      </div>
+      </div> <br/>
+        {% endfor %}
+        {% else %}
+        Sorry, your search for: <strong>{{ searched }}</strong> was not found ...
+        {% endif %}
+</div>
+{% endblock %}
