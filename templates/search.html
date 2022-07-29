@@ -9,9 +9,9 @@
         {% for pic in pictures %}
         <div style="float:left; width:250px; height:300px;">
       <div class="card space">
-      <a href="{{url_for('static', filename='images/'+ pic)}}" target="_blank"><img class="img-thumbnail" src="{{url_for('static', filename='images/'+ pic)}}" /></a>
+      <a href="{{ pic.path }}" target="_blank"><img class="img-thumbnail" src="{{ pic.path }}" /></a>
       <div class="card-body align-self-center">
-             <a href="{{url_for('static', filename='images/'+ pic)}}" target="_blank" class="btn btn-primary">View Image</a>
+             <a href="{{ pic.path }}" target="_blank" class="btn btn-primary">View Image</a>
            </div>
       </div>
       </div> <br/>

@@ -51,31 +51,36 @@ def delete_everything(dir):
 
 # -=-=-=-=-=- DataBase Queries Here -=-=-=-=-=-
 def get_pictures(phone):
-    SQLget = f" SELECT picture FROM dima.dbo.picture WHERE number = '{phone}'"
+    SQLget = f" SELECT id, picture FROM dima.dbo.picture WHERE number = '{phone}'"
+    result = []
     try:
-        delete_everything(dir)
         cursor.execute(SQLget)
-        myresult = cursor.fetchall()
-        i = 1
-        for row in myresult:
-            name = str(phone) + "-" + str(i)
-            result = row[0]
-            storedimagepath = f"static/images/img{name}.jpg"
-            with open(storedimagepath, "wb") as file:
-                file.write(result)
-                i += 1
-                file.close()
+        result = [{'id': row[0], 'path': row[1]} for row in cursor.fetchall()]
     except Exception as e:
         print(e)
+    return result
 
-def add_pictures(phone, picture):
-    SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture) values (?, ?)"
+
+def get_last(phone):
+    SQLget = f"SELECT pic_num FROM dima.dbo.picture WHERE number = '{phone}' ORDER BY id DESC"
     try:
-        cursor.execute(SQLinsert, (phone, picture))
+        cursor.execute(SQLget)
+        result = cursor.fetchone()
+        return result[0] if result is not None else 0
+    except Exception as e:
+        print(str(e))
+
+
+def add_pictures(phone, picture, pic_num):
+    SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture, pic_num) values (?, ?, ?)"
+    try:
+        path = f'static/images/img{phone}-{pic_num}'
+        with open(path, 'wb') as f:
+            f.write(picture)
+        cursor.execute(SQLinsert, (phone, path, pic_num))
         conn.commit()
     except Exception as e:
         print(e)
-    return
 # -=-=-=-=-=- DataBase Queries Ends Here -=-=-=-=-=-
 
 
@@ -118,7 +123,8 @@ def add():
             number = picture_form.number.data
             picture = picture_form.picture.data
             try:
-                add_pictures(phone=number, picture=picture.read())
+                last_id = get_last(number)
+                add_pictures(phone=number, picture=picture.read(), pic_num=last_id+1)
                 flash("Picture Added Successfully")
                 return render_template("home.html", picture_form=picture_form, search_form=search_form)
             except:
@@ -145,8 +151,7 @@ def search():
         # Get Data From Submitted Search
         number = form.searched.data
         # Query The DataBase
-        get_pictures(phone=number)
-        pictures = list_pictures(dir)
+        pictures = get_pictures(phone=number)
         return render_template("search.html", form=form, searched=number, pictures=pictures)
     else:
         flash("Please Write Something In The Search Bar")
