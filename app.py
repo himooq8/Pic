@@ -75,8 +75,11 @@ def add_pictures(phone, picture, pic_num):
     SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture, pic_num) values (?, ?, ?)"
     try:
         path = f'static/images/img{phone}-{pic_num}'
-        with open(f'{path}.jpg', 'wb') as f:
-            f.write(picture)
+        ext = picture.filename.split('.')[-1]
+        if ext not in ('jpg', 'jpeg', 'png'):
+            ext = 'jpg'
+        with open(f'{path}.{ext}', 'wb') as f:
+            f.write(picture.read())
         cursor.execute(SQLinsert, (phone, path, pic_num))
         conn.commit()
     except Exception as e:
@@ -124,7 +127,7 @@ def add():
             picture = picture_form.picture.data
             try:
                 last_id = get_last(number)
-                add_pictures(phone=number, picture=picture.read(), pic_num=last_id+1)
+                add_pictures(phone=number, picture=picture, pic_num=last_id+1)
                 flash("Picture Added Successfully")
                 return render_template("home.html", picture_form=picture_form, search_form=search_form)
             except:
