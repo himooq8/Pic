@@ -75,7 +75,7 @@ def add_pictures(phone, picture, pic_num):
     SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture, pic_num) values (?, ?, ?)"
     try:
         path = f'static/images/img{phone}-{pic_num}'
-        with open(path, 'wb') as f:
+        with open(f'{path}.jpg', 'wb') as f:
             f.write(picture)
         cursor.execute(SQLinsert, (phone, path, pic_num))
         conn.commit()
