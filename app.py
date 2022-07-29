@@ -2,21 +2,14 @@ import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for
 import pyodbc as dbb
 import sys
-from sqlalchemy.engine import URL
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from sqlalchemy import create_engine
-from datetime import datetime
-import sqlalchemy as sa
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from webforms import *
+import os
 
 # -=-=-=-=-=- DataBase Connection Starts Here -=-=-=-=-=-
 DRIVER = 'SQL Server'
-SERVER_NAME = 'LAPTOP-CMISMCVF'
+SERVER_NAME = 'HiMoO'
 DATABASE_NAME = 'dima'
-Uid = 'alsharhan'
+Uid = 'python'
 Pwd = 'Himoo@123'
 
 Connection = f"""
@@ -36,23 +29,53 @@ except Exception as e:
 else:
     cursor = conn.cursor()
 # -=-=-=-=-=- DataBase Connection Ends Here -=-=-=-=-=-
-# -=-=-=-=-=- DataBase Queries Here -=-=-=-=-=-
 
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# -=-=-=-=-=-  Static Imagee File Directory -=-=-=-=-=-=-=-=-=-
+dir = "C:/Users/S/Desktop/Projects/Pic/static/images"
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+def list_pictures(dir):
+    pictures = os.listdir(dir)
+    return pictures
+
+def delete_everything(dir):
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+
+
+# -=-=-=-=-=- DataBase Queries Here -=-=-=-=-=-
 def get_pictures(phone):
-    print('Show Content')
-    # cursor = conn.cursor()
-    cursor.execute(f" SELECT picture FROM dima.dbo.picture WHERE number='{phone}'")
-    records = ''
-    records = cursor.fetchall()
-    return records
+    SQLget = f" SELECT picture FROM dima.dbo.picture WHERE number = '{phone}'"
+    try:
+        delete_everything(dir)
+        cursor.execute(SQLget)
+        myresult = cursor.fetchall()
+        i = 1
+        for row in myresult:
+            name = str(phone) + "-" + str(i)
+            result = row[0]
+            storedimagepath = f"static/images/img{name}.jpg"
+            with open(storedimagepath, "wb") as file:
+                file.write(result)
+                i += 1
+                file.close()
+    except Exception as e:
+        print(e)
 
 def add_pictures(phone, picture):
-    print('Show Content')
-    # cursor = conn.cursor()
-    cursor.execute(f" INSERT INTO picture (number, picture) values (?, ?)", (phone, picture))
-    conn.commit()
+    SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture) values (?, ?)"
+    try:
+        cursor.execute(SQLinsert, (phone, picture))
+        conn.commit()
+    except Exception as e:
+        print(e)
     return
-
 # -=-=-=-=-=- DataBase Queries Ends Here -=-=-=-=-=-
 
 
@@ -69,11 +92,6 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template("500.html")
 
-# @app.route('/')
-# def home():
-#    return render_template("home.html")
-
-
 # @app.route('/posts/delete/<int:id>', methods=['GET', 'POST'])
 # def delete_post(id):
 #    # Grab all posts from DB
@@ -88,13 +106,6 @@ def page_not_found(e):
 #        flash("Something Went Wrong")
 #        posts = Posts.query.order_by(Posts.data_posted)
 #        return render_template("posts.html", posts=posts)
-
-# def show_tables():
-#    records = pd.read_sql_query("""
-#        SELECT *
-#        FROM dima.dbo.pictures
-#        """, engine)
-#    return records
 
 # -=-=-=-=-=- Search Function Here -=-=-=-=-=-
 @app.route('/', methods=['GET', 'POST'])
@@ -129,28 +140,15 @@ def base():
 def search():
     form = SearchForm()
     number = ''
+    directory = dir
     if form.validate_on_submit():
         # Get Data From Submitted Search
         number = form.searched.data
         # Query The DataBase
-        pictures = get_pictures(phone=number)
-        return render_template("search.html", form=form, pictures=pictures, searched=number)
+        get_pictures(phone=number)
+        pictures = list_pictures(dir)
+        return render_template("search.html", form=form, searched=number, pictures=pictures)
     else:
         flash("Please Write Something In The Search Bar")
         return render_template("search.html", form=form, searched=number)
 
-# @app.route('/search', methods=['GET', 'POST'])
-# def searching():
-#    search_form = SearchForm()
-#    photo_form = PhotoForm()
-#    if request.method == 'POST':
-#        n = search_form.searched.data
-#        form = photo_form.data
-#        if form.is_valid():
-#            photo = form.save(commit=False)
-#            photo.save()
-#            return render_template("search.html", search_form=search_form, photo_form=photo_form, n=n, form=form)
-#        return render_template("search.html", search_form=search_form, photo_form=photo_form, n=n, form=form)
-#    n = search_form.searched.data
-#    filtered = n.objects.filter(number=n) if n else None
-#    return render_template("search.html", search_form=search_form, photo_form=photo_form, n=n, filtered=filtered)
