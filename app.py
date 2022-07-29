@@ -40,14 +40,6 @@ dir = "C:/Users/S/Desktop/Projects/Pic/static/images"
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
-def list_pictures(dir):
-    pictures = os.listdir(dir)
-    return pictures
-
-def delete_everything(dir):
-    for f in os.listdir(dir):
-        os.remove(os.path.join(dir, f))
-
 
 # -=-=-=-=-=- DataBase Queries Here -=-=-=-=-=-
 def get_pictures(phone):
@@ -74,11 +66,11 @@ def get_last(phone):
 def add_pictures(phone, picture, pic_num):
     SQLinsert = f" INSERT INTO dima.dbo.picture (number, picture, pic_num) values (?, ?, ?)"
     try:
-        path = f'static/images/img{phone}-{pic_num}'
         ext = picture.filename.split('.')[-1]
         if ext not in ('jpg', 'jpeg', 'png'):
             ext = 'jpg'
-        with open(f'{path}.{ext}', 'wb') as f:
+        path = f'static/images/img{phone}-{pic_num}.{ext}'
+        with open(f'{path}', 'wb') as f:
             f.write(picture.read())
         cursor.execute(SQLinsert, (phone, path, pic_num))
         conn.commit()
