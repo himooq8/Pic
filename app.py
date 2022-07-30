@@ -126,7 +126,6 @@ def add():
                 flash("There Was An Error")
                 return render_template("home.html", picture_form=picture_form, search_form=search_form)
         else:
-            flash("Please Write Something In The Search Bar")
             return render_template("home.html", picture_form=picture_form, search_form=search_form)
     else:
         return render_template("home.html", picture_form=picture_form, search_form=search_form)
@@ -149,6 +148,5 @@ def search():
         pictures = get_pictures(phone=number)
         return render_template("search.html", form=form, searched=number, pictures=pictures)
     else:
-        flash("Please Write Something In The Search Bar")
         return render_template("search.html", form=form, searched=number)
 

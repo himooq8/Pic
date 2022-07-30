@@ -6,6 +6,8 @@ PATH = '/path/to/source/'
 DEST_PATH = 'static/images/'
 ALLOWED = ('jpg', 'png', 'jpeg')
 count = {}
+
+
 DRIVER = 'SQL Server'
 SERVER_NAME = 'HiMoO'
 DATABASE_NAME = 'dima'

@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
-{% block title %} D i m a {% endblock %}
+{% block title %} Dima {% endblock %}
 {% block content %}
-<div class="container">
+
     <br/>
-  <h2> You Searched For:<strong><em>{{ searched }}</em></strong> </h2>
-        <br/><br/><br/>
-        {% if pictures %}
-        {% for pic in pictures %}
-        <div style="float:left; width:250px; height:300px;">
-      <div class="card space">
-      <a href="{{ pic.path }}" target="_blank"><img class="img-thumbnail" src="{{ pic.path }}" /></a>
-      <div class="card-body align-self-center">
-             <a href="{{ pic.path }}" target="_blank" class="btn btn-primary">View Image</a>
-           </div>
-      </div>
-      </div> <br/>
-        {% endfor %}
+  <h2 class="centered"> Results For: <strong><em>{{ searched }}</em></strong> </h2>
+
+    <section class="gallery min-vh-100">
+        <div class="container-lg">
+            <div class="row gy-4 row-cols-1 row-cols-sm-2 row-cols-md-3">
+            {% if pictures %}
+            {% for pic in pictures %}
+                <div class="col">
+                    <a href="{{ pic.path }}" target="_blank"><img src="{{ pic.path }}" class="gallery-item" alt="Gallery1"></a>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </section>
+
         {% else %}
         <h5>This Number: <strong>{{ searched }}</strong> doesnt have any pictures ...</h5>
         {% endif %}
-</div>
+
 {% endblock %}

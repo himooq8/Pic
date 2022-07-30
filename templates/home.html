@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 {% block title %} D i m a {% endblock %}
 {% block content %}
-<div class="container">
-    <br/><br/>
-    <br/><br/>
+<div class="container-lg">
+    <br/>
     {% for message in get_flashed_messages() %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
-    <br/><br/>
-    <br/><br/>
-  <form method="POST" action="{{ url_for('add') }}" class="d-flex" enctype="multipart/form-data">
+    <br/>
+  <form method="POST" action="{{ url_for('add') }}" class="row g-3 centered" enctype="multipart/form-data">
+
         {{ form.hidden_tag() }}
-        {{ picture_form.number(class="form-control me-2") }} <br/><br/>
-        {{ picture_form.picture() }} <br/><br/>
-        {{ picture_form.submit(class="btn btn-primary") }} <br/><br/>
+        <div class="d-grid gap-2 col-6 mx-auto">
+        {{ picture_form.number(class="form-control form-control-lg") }}
+        <br/>
+        {{ picture_form.picture(class="form-control form-control-lg") }}
+        <br/>
+        {{ picture_form.submit(class="btn btn-outline-primary btn-lg") }} <br/><br/>
+        </div>
+
   </form>
 </div>
 {% endblock %}

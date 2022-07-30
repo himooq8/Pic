@@ -1,0 +1,51 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+.bigger a{
+    text-size: 400px;
+}
+
+body{
+    background-color: ##808080;
+}
+
+.gallery{
+    padding: 80px 0px;
+}
+
+.gallerya{
+    padding: 5px 0px;
+}
+
+.centered{
+    text-align: center;
+}
+
+
+img{
+    max-width: 100%;
+}
+
+.gallery img{
+    background: #fff;
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.gallerya img{
+    padding: 2px;
+    width: 20%;
+    cursor: pointer;
+}
+
+#gallery-popup .modal-img{
+    width: 100%;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+}

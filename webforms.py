@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, EqualTo, Length
 # -- Create Form Class's Here --
 # -- Login Form --
 class PhotoForm(FlaskForm):
-    number = StringField("Enter Number Here", validators=[DataRequired()])
+    number = StringField("Phone Number", validators=[DataRequired()], render_kw={"placeholder": "Customer Phone Number Here"})
     picture = FileField("Upload Here", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
