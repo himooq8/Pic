@@ -114,17 +114,16 @@ def add():
     search_form = SearchForm()
     if request.method == 'POST':
         if picture_form.validate_on_submit():
-            # Query The DataBase
             number = picture_form.number.data
-            picture = picture_form.picture.data
-            try:
-                last_id = get_last(number)
-                add_pictures(phone=number, picture=picture, pic_num=last_id+1)
-                flash("Picture Added Successfully")
-                return render_template("home.html", picture_form=picture_form, search_form=search_form)
-            except:
-                flash("There Was An Error")
-                return render_template("home.html", picture_form=picture_form, search_form=search_form)
+            pictures = picture_form.picture.data
+            last_id = get_last(number)+1
+            for idx, picture in enumerate(pictures):
+                try:
+                    add_pictures(phone=number, picture=picture, pic_num=last_id+idx)
+                except:
+                    flash("There Was An Error")
+            flash("Picture Added Successfully")
+            return render_template("home.html", picture_form=picture_form, search_form=search_form)
         else:
             return render_template("home.html", picture_form=picture_form, search_form=search_form)
     else:
