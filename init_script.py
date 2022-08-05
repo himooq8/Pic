@@ -4,7 +4,7 @@ import pyodbc as dbb
 
 PATH = '/path/to/source/'
 DEST_PATH = 'static/images/'
-ALLOWED = ('jpg', 'png', 'jpeg')
+ALLOWED = ('jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG')
 count = {}
 
 
